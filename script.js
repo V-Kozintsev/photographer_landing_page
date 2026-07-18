@@ -39,6 +39,7 @@ const reviews = [
 
 let reviewIndex = 0;
 let lightboxIndex = 0;
+let galleryIndex = 0;
 
 function lockPageScroll() {
   document.body.style.overflow = "hidden";
@@ -91,9 +92,15 @@ document.querySelectorAll(".faq-item").forEach((item) => {
   });
 });
 
+function scrollGalleryTo(index, behavior = "smooth") {
+  const items = [...gallery.children];
+  galleryIndex = Math.max(0, Math.min(index, items.length - 1));
+  gallery.scrollTo({ left: items[galleryIndex].offsetLeft, behavior });
+}
+
 function scrollGallery(direction) {
-  const amount = gallery.clientWidth * direction;
-  gallery.scrollBy({ left: amount, behavior: "smooth" });
+  syncDots();
+  scrollGalleryTo(galleryIndex + direction);
 }
 
 document.querySelector("[data-slider-prev]").addEventListener("click", () => scrollGallery(-1));
@@ -107,7 +114,7 @@ function buildDots() {
     button.type = "button";
     button.setAttribute("aria-label", `Показать фото ${index + 1}`);
     button.addEventListener("click", () => {
-      gallery.children[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      scrollGalleryTo(index);
     });
     dots.append(button);
   }
@@ -120,6 +127,7 @@ function syncDots() {
     return distance < nearest.distance ? { index, distance } : nearest;
   }, { index: 0, distance: Number.POSITIVE_INFINITY });
 
+  galleryIndex = active.index;
   [...dots.children].forEach((dot, index) => dot.classList.toggle("is-active", index === active.index));
 }
 

@@ -57,6 +57,10 @@ a {
 
 button {
   font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .site-header {
@@ -186,7 +190,7 @@ button {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(248, 246, 242, 0.99) 0%, rgba(248, 246, 242, 0.88) 33%, rgba(248, 246, 242, 0.12) 58%, rgba(248, 246, 242, 0) 100%),
-    url("./assets/hero-wedding.png") right center / auto 100% no-repeat;
+    url("./assets/hero-wedding.jpg") right center / auto 100% no-repeat;
 }
 
 .hero-content {
@@ -344,26 +348,26 @@ h1 {
 }
 
 .crop-portrait {
-  background-image: url("./assets/service-portrait.png");
+  background-image: url("./assets/service-portrait.jpg");
   background-position: center;
 }
 
 .crop-wedding {
-  background-image: url("./assets/service-wedding.png");
+  background-image: url("./assets/service-wedding.jpg");
   background-position: center;
 }
 
 .crop-brand {
-  background-image: url("./assets/service-brand.png");
+  background-image: url("./assets/service-brand.jpg");
   background-position: center;
 }
 
 .crop-field {
-  background-image: url("./assets/field.png");
+  background-image: url("./assets/field.jpg");
 }
 
 .crop-flowers {
-  background-image: url("./assets/flowers.png");
+  background-image: url("./assets/flowers.jpg");
 }
 
 .service-card {
@@ -487,6 +491,9 @@ h1 {
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 4px 0 12px;
 }
@@ -504,6 +511,7 @@ h1 {
   background: #ddd;
   overflow: hidden;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   isolation: isolate;
   cursor: zoom-in;
   box-shadow: 0 12px 34px rgba(31, 27, 22, 0.08);
@@ -710,7 +718,7 @@ h1 {
 }
 
 .review-avatar {
-  background-image: url("./assets/review-avatars.png");
+  background-image: url("./assets/review-avatars.jpg");
   background-repeat: no-repeat;
   background-size: 300% 100%;
 }
@@ -774,14 +782,19 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.44);
+  color: var(--ink);
   text-align: left;
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .faq-item span {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 20px;
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -819,7 +832,7 @@ h1 {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: url("./assets/cta-beach.png") center / cover;
+  background: url("./assets/cta-beach.jpg") center / cover;
   filter: saturate(0.92);
 }
 
@@ -1051,7 +1064,7 @@ h1 {
     order: 2;
     background:
       linear-gradient(180deg, rgba(248, 246, 242, 0) 0%, rgba(248, 246, 242, 0.84) 100%),
-      url("./assets/hero-wedding.png") 67% center / cover no-repeat;
+      url("./assets/hero-wedding.jpg") 67% center / cover no-repeat;
   }
 
   .hero-content {
@@ -1142,7 +1155,7 @@ h1 {
     order: initial;
     background:
       linear-gradient(90deg, rgba(248, 246, 242, 0.99) 0%, rgba(248, 246, 242, 0.9) 45%, rgba(248, 246, 242, 0.18) 68%, rgba(248, 246, 242, 0) 100%),
-      url("./assets/hero-wedding.png") right center / auto 100% no-repeat;
+      url("./assets/hero-wedding.jpg") right center / auto 100% no-repeat;
   }
 
   .hero-content {
@@ -1319,10 +1332,24 @@ h1 {
   }
 
   .hero {
+    position: relative;
+    min-height: min(760px, 88vh);
     padding-top: 96px;
   }
 
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    min-height: auto;
+    order: initial;
+    background:
+      linear-gradient(180deg, rgba(248, 246, 242, 0.96) 0%, rgba(248, 246, 242, 0.88) 48%, rgba(248, 246, 242, 0.22) 100%),
+      url("./assets/hero-wedding.jpg") 64% center / cover no-repeat;
+  }
+
   .hero-content {
+    position: relative;
+    z-index: 1;
     width: min(100% - 32px, 420px);
   }
 
