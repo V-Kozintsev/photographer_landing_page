@@ -895,6 +895,9 @@ h1 {
   background: rgba(8, 7, 6, 0.94);
   opacity: 0;
   pointer-events: none;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
   transition: opacity 0.2s ease;
 }
 
@@ -911,6 +914,8 @@ h1 {
   object-fit: contain;
   background: #111;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .lightbox-close {

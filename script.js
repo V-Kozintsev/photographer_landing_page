@@ -40,6 +40,8 @@ const reviews = [
 let reviewIndex = 0;
 let lightboxIndex = 0;
 let galleryIndex = 0;
+let lightboxSwipeStartX = 0;
+let lightboxSwipeStartY = 0;
 
 function lockPageScroll() {
   document.body.style.overflow = "hidden";
@@ -193,6 +195,29 @@ lightboxModal.addEventListener("click", (event) => {
     closeLightbox();
   }
 });
+
+lightboxModal.addEventListener("touchstart", (event) => {
+  const touch = event.changedTouches[0];
+  lightboxSwipeStartX = touch.clientX;
+  lightboxSwipeStartY = touch.clientY;
+}, { passive: true });
+
+lightboxModal.addEventListener("touchend", (event) => {
+  if (!lightboxModal.classList.contains("is-open")) {
+    return;
+  }
+
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - lightboxSwipeStartX;
+  const deltaY = touch.clientY - lightboxSwipeStartY;
+  const isHorizontalSwipe = Math.abs(deltaX) > 54 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4;
+
+  if (!isHorizontalSwipe) {
+    return;
+  }
+
+  showLightboxImage(deltaX < 0 ? lightboxIndex + 1 : lightboxIndex - 1);
+}, { passive: true });
 
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && lightboxModal.classList.contains("is-open")) {
