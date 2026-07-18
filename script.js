@@ -1,48 +1,85 @@
 const header = document.querySelector("[data-header]");
+const brand = document.querySelector(".brand");
 const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const gallery = document.querySelector("[data-gallery]");
 const dots = document.querySelector("[data-dots]");
 const reviewContent = document.querySelector("[data-review-content]");
+const reviewPhoto = document.querySelector("[data-review-photo]");
 const lightboxModal = document.querySelector("[data-lightbox-modal]");
 const lightboxImage = document.querySelector("[data-lightbox-image]");
 const lightboxClose = document.querySelector("[data-lightbox-close]");
+const lightboxPrev = document.querySelector("[data-lightbox-prev]");
+const lightboxNext = document.querySelector("[data-lightbox-next]");
+const galleryItems = [...document.querySelectorAll("[data-lightbox]")];
 
 const reviews = [
   {
     text: "Анна удивительно чувствует людей и ловит настоящие эмоции. Фотографии получились живыми и тёплыми, а история нашего дня осталась именно такой, как мы её помним.",
     name: "Мария и Алексей",
     type: "Свадебная съёмка",
+    avatar: "review-avatar-couple",
+    avatarPosition: "0% center",
   },
   {
     text: "Я переживала, что буду скованной в кадре, но съёмка прошла легко. Получились портреты, в которых я узнаю себя и при этом вижу себя по-новому.",
     name: "Екатерина",
     type: "Портретная съёмка",
+    avatar: "review-avatar-portrait",
+    avatarPosition: "50% center",
   },
   {
     text: "Для бренда было важно получить спокойный, дорогой визуал без лишней постановочности. Анна быстро поняла задачу и собрала цельную серию.",
     name: "Lumi Home",
     type: "Бренд-контент",
+    avatar: "review-avatar-brand",
+    avatarPosition: "100% center",
   },
 ];
 
 let reviewIndex = 0;
+let lightboxIndex = 0;
+
+function lockPageScroll() {
+  document.body.style.overflow = "hidden";
+}
+
+function unlockPageScroll() {
+  if (!document.body.classList.contains("nav-open") && !lightboxModal.classList.contains("is-open")) {
+    document.body.style.overflow = "";
+  }
+}
+
+function setNavOpen(isOpen) {
+  nav.classList.toggle("is-open", isOpen);
+  navToggle.classList.toggle("is-open", isOpen);
+  document.body.classList.toggle("nav-open", isOpen);
+  navToggle.setAttribute("aria-expanded", String(isOpen));
+
+  if (isOpen) {
+    lockPageScroll();
+  } else {
+    unlockPageScroll();
+  }
+}
 
 window.addEventListener("scroll", () => {
   header.classList.toggle("is-scrolled", window.scrollY > 16);
 });
 
 navToggle.addEventListener("click", () => {
-  const isOpen = nav.classList.toggle("is-open");
-  navToggle.classList.toggle("is-open", isOpen);
-  navToggle.setAttribute("aria-expanded", String(isOpen));
+  setNavOpen(!nav.classList.contains("is-open"));
+});
+
+brand.addEventListener("click", () => {
+  if (nav.classList.contains("is-open")) {
+    setNavOpen(false);
+  }
 });
 
 nav.addEventListener("click", (event) => {
   if (event.target.matches("a")) {
-    nav.classList.remove("is-open");
-    navToggle.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
+    setNavOpen(false);
   }
 });
 
@@ -88,6 +125,8 @@ function syncDots() {
 
 function renderReview() {
   const review = reviews[reviewIndex];
+  reviewPhoto.className = `review-photo review-avatar ${review.avatar}`;
+  reviewPhoto.style.backgroundPosition = review.avatarPosition;
   reviewContent.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }], {
     duration: 220,
     easing: "ease-out",
@@ -109,28 +148,38 @@ document.querySelector("[data-review-next]").addEventListener("click", () => {
   renderReview();
 });
 
+renderReview();
 buildDots();
 syncDots();
 gallery.addEventListener("scroll", () => window.requestAnimationFrame(syncDots), { passive: true });
 window.addEventListener("resize", syncDots);
 
-document.querySelectorAll("[data-lightbox]").forEach((item) => {
+function showLightboxImage(index) {
+  lightboxIndex = (index + galleryItems.length) % galleryItems.length;
+  const item = galleryItems[lightboxIndex];
+  const previewImage = item.querySelector("img");
+  lightboxImage.src = previewImage?.currentSrc || item.dataset.lightbox;
+  lightboxImage.alt = previewImage?.alt || "Фотография из портфолио";
+}
+
+galleryItems.forEach((item, index) => {
   item.addEventListener("click", () => {
-    lightboxImage.src = item.dataset.lightbox;
-    lightboxImage.alt = item.querySelector("img")?.alt || "Фотография из портфолио";
+    showLightboxImage(index);
     lightboxModal.classList.add("is-open");
     lightboxModal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    lockPageScroll();
   });
 });
 
 function closeLightbox() {
   lightboxModal.classList.remove("is-open");
   lightboxModal.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
+  unlockPageScroll();
 }
 
 lightboxClose.addEventListener("click", closeLightbox);
+lightboxPrev.addEventListener("click", () => showLightboxImage(lightboxIndex - 1));
+lightboxNext.addEventListener("click", () => showLightboxImage(lightboxIndex + 1));
 lightboxModal.addEventListener("click", (event) => {
   if (event.target === lightboxModal) {
     closeLightbox();
@@ -140,5 +189,11 @@ lightboxModal.addEventListener("click", (event) => {
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && lightboxModal.classList.contains("is-open")) {
     closeLightbox();
+  }
+  if (event.key === "ArrowLeft" && lightboxModal.classList.contains("is-open")) {
+    showLightboxImage(lightboxIndex - 1);
+  }
+  if (event.key === "ArrowRight" && lightboxModal.classList.contains("is-open")) {
+    showLightboxImage(lightboxIndex + 1);
   }
 });
