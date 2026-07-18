@@ -1,0 +1,7 @@
+node_modules
+dist
+tmp
+.gigacode
+.DS_Store
+*.log
+*.err
