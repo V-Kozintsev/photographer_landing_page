@@ -196,7 +196,7 @@ button {
 .hero-content {
   position: relative;
   z-index: 1;
-  width: min(760px, calc(100% - 40px));
+  width: min(720px, calc(100% - 40px));
   margin-left: clamp(20px, 6vw, 72px);
   padding-top: 86px;
 }
@@ -227,9 +227,9 @@ h2,
 }
 
 h1 {
-  max-width: 760px;
+  max-width: 720px;
   margin-bottom: 26px;
-  font-size: clamp(44px, 5.8vw, 74px);
+  font-size: clamp(44px, 4.6vw, 66px);
 }
 
 .title-line {
@@ -895,7 +895,7 @@ h1 {
   background: rgba(8, 7, 6, 0.94);
   opacity: 0;
   pointer-events: none;
-  touch-action: pan-y;
+  touch-action: none;
   -webkit-user-select: none;
   user-select: none;
   transition: opacity 0.2s ease;
@@ -915,6 +915,7 @@ h1 {
   background: #111;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
   -webkit-user-drag: none;
+  touch-action: none;
   user-select: none;
 }
 
